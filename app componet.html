@@ -1,0 +1,102 @@
+<div class="container my-4">
+  <h2>Registro de Productos</h2>
+  <form [formGroup]="formulario" (ngSubmit)="agregarProducto()" novalidate>
+    
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input
+        id="nombre"
+        formControlName="nombre"
+        class="form-control"
+        [ngClass]="{'is-invalid': f['nombre'].touched && f['nombre'].invalid, 'is-valid': f['nombre'].touched && f['nombre'].valid}"
+      />
+      <div *ngIf="f['nombre'].touched && f['nombre'].invalid" class="alert alert-danger mt-1">
+        <small *ngIf="f['nombre'].errors?.['required']">El nombre es obligatorio.</small>
+        <small *ngIf="f['nombre'].errors?.['minlength']">El nombre debe tener al menos 3 caracteres.</small>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="precio" class="form-label">Precio</label>
+      <input
+        id="precio"
+        formControlName="precio"
+        type="number"
+        class="form-control"
+        [ngClass]="{'is-invalid': f['precio'].touched && f['precio'].invalid, 'is-valid': f['precio'].touched && f['precio'].valid}"
+      />
+      <div *ngIf="f['precio'].touched && f['precio'].invalid" class="alert alert-danger mt-1">
+        <small *ngIf="f['precio'].errors?.['required']">El precio es obligatorio.</small>
+        <small *ngIf="f['precio'].errors?.['min']">El precio debe ser mayor que 0.</small>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="fechaCaducidad" class="form-label">Fecha de caducidad</label>
+      <input
+        id="fechaCaducidad"
+        formControlName="fechaCaducidad"
+        type="date"
+        class="form-control"
+        [ngClass]="{'is-invalid': f['fechaCaducidad'].touched && f['fechaCaducidad'].invalid, 'is-valid': f['fechaCaducidad'].touched && f['fechaCaducidad'].valid}"
+      />
+      <div *ngIf="f['fechaCaducidad'].touched && f['fechaCaducidad'].invalid" class="alert alert-danger mt-1">
+        <small *ngIf="f['fechaCaducidad'].errors?.['required']">La fecha de caducidad es obligatoria.</small>
+        <small *ngIf="f['fechaCaducidad'].errors?.['fechaInvalida']">La fecha debe ser futura.</small>
+      </div>
+    </div>
+
+    <
+    <div class="mb-3">
+      <label for="categoria" class="form-label">Categoría</label>
+      <select
+        id="categoria"
+        formControlName="categoria"
+        class="form-select"
+        [ngClass]="{'is-invalid': f['categoria'].touched && f['categoria'].invalid, 'is-valid': f['categoria'].touched && f['categoria'].valid}"
+      >
+        <option value="">Seleccione una categoría</option>
+        <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
+      </select>
+      <div *ngIf="f['categoria'].touched && f['categoria'].invalid" class="alert alert-danger mt-1">
+        <small *ngIf="f['categoria'].errors?.['required']">La categoría es obligatoria.</small>
+      </div>
+    </div>
+
+    
+    <div class="form-check mb-3">
+      <input id="tieneDescuento" formControlName="tieneDescuento" type="checkbox" class="form-check-input" />
+      <label for="tieneDescuento" class="form-check-label">¿Tiene descuento?</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid">Agregar Producto</button>
+  </form>
+
+  <h2 class="mt-4">Productos</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Caducidad</th>
+          <th>Categoría</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of productos; let i = index">
+          <td>{{ producto['nombre'] }}</td>
+      
+          <td [innerHTML]="producto['precio'] | descuento:producto['tieneDescuento']"></td>
+          
+          <td [innerHTML]="producto['fechaCaducidad'] | caducidad"></td>
+          <td>{{ producto['categoria'] }}</td>
+          <td>
+            <button (click)="eliminarProducto(i)" class="btn btn-danger btn-sm">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
